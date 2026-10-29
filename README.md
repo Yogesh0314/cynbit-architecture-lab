@@ -99,8 +99,4 @@ Cynbit's/
 
 ---
 
-## 👨‍💻 Applicant Details
-- **Candidate:** Yogesh Patil
-- **Role:** Full Stack Developer Intern
-- **Candidate Portal:** [Submit Work](https://www.cynbit.in/candidate/cmsd7jaq9000704l6bcxc7c0m)
-- **Company:** Cynbit Technologies (Jaipur, Rajasthan)
+
