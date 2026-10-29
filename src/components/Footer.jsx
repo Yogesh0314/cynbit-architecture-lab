@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Footer({ onOpenLab }) {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (newsletterEmail.trim()) {
+      setSubscribed(true);
+      setTimeout(() => {
+        setNewsletterEmail('');
+      }, 4000);
+    }
+  };
   return (
     <footer className="footer" id="contact">
       <div className="container">
@@ -70,17 +82,38 @@ export default function Footer({ onOpenLab }) {
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: '1.5' }}>
               Join 25,000+ architects and tech leaders receiving our weekly technical deep-dives on autonomous agents and system engineering.
             </p>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input
-                type="email"
-                placeholder="Enter work email"
-                className="form-input"
-                style={{ padding: '0.6rem 0.85rem', fontSize: '0.85rem' }}
-              />
-              <button type="button" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.75rem' }}>
-                Join
-              </button>
-            </div>
+            {subscribed ? (
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                padding: '0.75rem 1rem',
+                borderRadius: '0.5rem',
+                color: '#34d399',
+                fontSize: '0.8rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>check_circle</span>
+                <span>Subscribed to Executive Briefing (Demo Mode)</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter work email"
+                  className="form-input"
+                  aria-label="Work email for executive briefing"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  style={{ padding: '0.6rem 0.85rem', fontSize: '0.85rem' }}
+                />
+                <button type="submit" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                  Join
+                </button>
+              </form>
+            )}
           </div>
         </div>
 

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function BlueprintModal({ blueprint, onClose }) {
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
   const [simulatedSubmit, setSimulatedSubmit] = useState(false);
   const [leadForm, setLeadForm] = useState({
     fullName: '',
@@ -9,6 +11,17 @@ export default function BlueprintModal({ blueprint, onClose }) {
     company: '',
     notes: ''
   });
+
+  // Close modal on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   if (!blueprint) return null;
 
@@ -47,22 +60,62 @@ ${blueprint.capabilities && blueprint.capabilities.length > 0
 *32/115 Pratap Nagar, Jaipur, Rajasthan 302033*
 `;
 
-  const handleCopy = (e) => {
+  const handleCopy = async (e) => {
     if (e) e.preventDefault();
-    navigator.clipboard.writeText(blueprintMarkdown);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setCopyError(false);
+    try {
+      if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(blueprintMarkdown);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      } else {
+        throw new Error('Clipboard API not available');
+      }
+    } catch (err) {
+      // Fallback for environments where Clipboard API is blocked or unavailable
+      try {
+        const textarea = document.createElement('textarea');
+        textarea.value = blueprintMarkdown;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        textarea.style.top = '-9999px';
+        textarea.setAttribute('readonly', '');
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (successful) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        } else {
+          setCopyError(true);
+          setTimeout(() => setCopyError(false), 3000);
+        }
+      } catch (fallbackErr) {
+        setCopyError(true);
+        setTimeout(() => setCopyError(false), 3000);
+      }
+    }
   };
 
   const handleDownload = (e) => {
     if (e) e.preventDefault();
-    const blob = new Blob([blueprintMarkdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${specId}-blueprint.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+    setDownloadError(false);
+    try {
+      const blob = new Blob([blueprintMarkdown], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${specId}-blueprint.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setDownloadError(true);
+      setTimeout(() => setDownloadError(false), 3000);
+    }
   };
 
   const handleSubmitLead = (e) => {
@@ -80,7 +133,7 @@ ${blueprint.capabilities && blueprint.capabilities.length > 0
     `- Cloud: ${blueprint.cloud}\n` +
     `- Vector DB: ${blueprint.vectorDB}\n` +
     `- Timeline: ${blueprint.metrics.weeks} Weeks (${blueprint.metrics.totalSprints} Sprints)\n` +
-    `- Capabilities: ${blueprint.capabilities.join(', ') || 'Baseline'}\n\n` +
+    `- Capabilities: ${blueprint.capabilities?.length ? blueprint.capabilities.join(', ') : 'Baseline'}\n\n` +
     `Please review this technical blueprint and advise on scheduling our discovery sync.\n\nBest regards,\n${leadForm.fullName || ''}`
   )}`;
 
@@ -155,8 +208,8 @@ ${blueprint.capabilities && blueprint.capabilities.length > 0
             onClick={handleCopy}
             style={{ flex: 1, padding: '0.75rem', fontSize: '0.82rem' }}
           >
-            <span className="material-symbols-outlined">{copied ? 'done' : 'content_copy'}</span>
-            <span>{copied ? 'Copied to Clipboard!' : 'Copy Specification (Markdown)'}</span>
+            <span className="material-symbols-outlined">{copied ? 'done' : copyError ? 'error_outline' : 'content_copy'}</span>
+            <span>{copied ? 'Copied to Clipboard!' : copyError ? 'Copy Failed (Select text manually)' : 'Copy Specification (Markdown)'}</span>
           </button>
 
           <button
@@ -165,8 +218,8 @@ ${blueprint.capabilities && blueprint.capabilities.length > 0
             onClick={handleDownload}
             style={{ flex: 1, padding: '0.75rem', fontSize: '0.82rem' }}
           >
-            <span className="material-symbols-outlined">download</span>
-            <span>Download Spec (.md)</span>
+            <span className="material-symbols-outlined">{downloadError ? 'error_outline' : 'download'}</span>
+            <span>{downloadError ? 'Download Failed' : 'Download Spec (.md)'}</span>
           </button>
         </div>
 

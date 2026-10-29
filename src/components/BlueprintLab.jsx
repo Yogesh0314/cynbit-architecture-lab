@@ -606,6 +606,11 @@ export default function BlueprintLab({ onGenerateBlueprint }) {
                     </div>
                   </div>
                 </div>
+
+                {/* Estimate Baseline Disclaimer */}
+                <div style={{ marginTop: '0.85rem', fontSize: '0.7rem', color: '#64748b', fontStyle: 'italic', textAlign: 'center' }}>
+                  *All delivery timelines, sprint allocations, and ROI metrics are estimated architectural projections for planning purposes.
+                </div>
               </div>
 
               {/* Action Buttons */}

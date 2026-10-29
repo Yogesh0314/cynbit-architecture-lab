@@ -169,6 +169,8 @@ To solve this friction, we designed and built an interactive system that bridges
 | **Test 6: Scenario Switching** | Switch between all 3 preset scenarios and execute | **PASSED** (Different outputs and metrics produced cleanly) |
 | **Test 7: Blueprint Generation** | Generate blueprint, copy to clipboard, download `.md` | **PASSED** (Markdown matches selections; modal opens/closes) |
 | **Test 8: Production Build** | Run `npm run build` | **PASSED** (Zero warnings, zero errors in 2.05s) |
+| **Test 9: Vercel Portability** | Zero local filesystem drive paths, framework preset auto-detection | **PASSED** (vercel.json configured with vite preset & dist) |
+| **Test 10: Automated Suite** | Run `npm test` (68 automated verification assertions) | **PASSED** (100% test pass rate across all modules) |
 
 ---
 

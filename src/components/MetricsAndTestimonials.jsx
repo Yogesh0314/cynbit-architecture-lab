@@ -124,6 +124,11 @@ export default function MetricsAndTestimonials() {
             </div>
           ))}
         </div>
+
+        {/* Impact Disclaimer Footnote */}
+        <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.72rem', color: '#64748b', fontStyle: 'italic' }}>
+          *Metrics and testimonials represent historical case study engagements and partner deployments; individual system results vary with scope.
+        </div>
       </div>
     </section>
   );

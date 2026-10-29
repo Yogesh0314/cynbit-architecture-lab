@@ -82,18 +82,29 @@ export default function AgentSandbox() {
   const [displayedEvents, setDisplayedEvents] = useState([]);
   const [showFinalResult, setShowFinalResult] = useState(false);
   const timerRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   const activeScenario = SCENARIOS[selectedIdx];
 
-  // Clean up any running timer on unmount
+  const cleanupTimers = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  // Clean up any running timers on unmount
   useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return cleanupTimers;
   }, []);
 
   const handleSelectScenario = (index) => {
     if (executionState === 'RUNNING' || executionState === 'INITIALIZING') return;
+    cleanupTimers();
     setSelectedIdx(index);
     setCustomPrompt(SCENARIOS[index].inputPlaceholder);
     setExecutionState('IDLE');
@@ -116,12 +127,12 @@ export default function AgentSandbox() {
     setShowFinalResult(false);
     setExecutionState('INITIALIZING');
 
-    if (timerRef.current) clearInterval(timerRef.current);
+    cleanupTimers();
 
     const scenarioEvents = activeScenario.events;
 
     // Small delay for INITIALIZING state, then run sequential events
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setExecutionState('RUNNING');
       let currentEventIdx = 0;
 
@@ -131,7 +142,8 @@ export default function AgentSandbox() {
           setDisplayedEvents(prev => [...prev, nextEvent]);
           currentEventIdx++;
         } else {
-          clearInterval(timerRef.current);
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = null;
           setExecutionState('COMPLETED');
           setShowFinalResult(true);
         }
@@ -144,7 +156,7 @@ export default function AgentSandbox() {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (timerRef.current) clearInterval(timerRef.current);
+    cleanupTimers();
     setExecutionState('IDLE');
     setDisplayedEvents([]);
     setShowFinalResult(false);

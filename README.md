@@ -50,11 +50,24 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Building for Production:
+### Building for Production & Testing:
 ```bash
+# Run verification suite (68 tests)
+npm test
+
+# Build production bundle
 npm run build
+
+# Preview production build locally
+npm run preview
 ```
 The optimized bundle is generated in `/dist` and ready for instant deployment on **Vercel**, **Netlify**, or **GitHub Pages**.
+
+### Vercel Deployment Configuration:
+- **Framework Preset:** `Vite`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Configuration File:** `vercel.json` (auto-detected, zero-config deployment)
 
 ---
 
@@ -72,7 +85,7 @@ The optimized bundle is generated in `/dist` and ready for instant deployment on
 ## 📂 Project Structure
 
 ```
-Cynbit's/
+cynbit-architecture-lab/
 ├── dist/                     # Optimized production bundle
 ├── public/
 │   ├── favicon.svg           # Cynbit SVG favicon
@@ -90,8 +103,12 @@ Cynbit's/
 │   ├── App.jsx               # Main application container
 │   ├── index.css             # Cynbit architectural design system
 │   └── main.jsx              # React DOM entrypoint
+├── .env.example              # Environment variables template (safe placeholders)
+├── .gitignore                # Version control exclusions (.env, dist, node_modules)
 ├── index.html                # SEO-optimized HTML5 entrypoint
 ├── package.json              # Project dependencies & scripts
+├── test_alignment.mjs        # 68-test automated verification suite
+├── vercel.json               # Vercel framework & build configuration
 ├── vite.config.js            # Vite configuration
 ├── TECHNICAL_REPORT.md       # Comprehensive assessment submission report
 └── README.md                 # Project documentation

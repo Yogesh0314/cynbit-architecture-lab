@@ -1,7 +1,18 @@
+# Dependencies
 node_modules
+
+# Production build outputs
 dist
 dist-ssr
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Local overrides & IDE
 *.local
 .vscode
 .idea
 *.log
+.DS_Store
