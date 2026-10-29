@@ -18,11 +18,11 @@
     <line x1="29" y1="15" x2="22" y2="29" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
     <circle cx="22" cy="22" r="2" fill="#ffffff" opacity="0.8" />
   </g>
-  <!-- Cynbit Text -->
-  <text x="68" y="38" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="28" fill="#0f172a" letter-spacing="-0.04em">
-    cyn<tspan fill="#2563eb">bit</tspan>
+  <!-- Cynbit Text with high contrast for dark background -->
+  <text x="68" y="37" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="900" font-size="28" fill="#ffffff" letter-spacing="-0.03em">
+    cyn<tspan fill="#38bdf8">bit</tspan>
   </text>
-  <text x="68" y="49" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="9" fill="#64748b" letter-spacing="0.25em">
+  <text x="68" y="49" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="700" font-size="9" fill="#94a3b8" letter-spacing="0.28em">
     TECHNOLOGIES
   </text>
 </svg>

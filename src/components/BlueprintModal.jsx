@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export default function BlueprintModal({ blueprint, onClose }) {
   const [copied, setCopied] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [simulatedSubmit, setSimulatedSubmit] = useState(false);
   const [leadForm, setLeadForm] = useState({
     fullName: '',
     email: '',
@@ -31,7 +31,9 @@ export default function BlueprintModal({ blueprint, onClose }) {
 - **Recommended Squad Composition:** ${blueprint.metrics.squad}
 
 ## 2. Configured Capabilities & Workflows
-${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
+${blueprint.capabilities && blueprint.capabilities.length > 0 
+  ? blueprint.capabilities.map(c => `- ${c}`).join('\n')
+  : '- Baseline Core Architecture (No optional add-ons selected)'}
 
 ## 3. Engineering Phases & Milestone Roadmap
 - **Sprint 1 - Discovery & Topology Alignment:** Data pipeline mapping, security baseline, and API schemas.
@@ -45,13 +47,15 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
 *32/115 Pratap Nagar, Jaipur, Rajasthan 302033*
 `;
 
-  const handleCopy = () => {
+  const handleCopy = (e) => {
+    if (e) e.preventDefault();
     navigator.clipboard.writeText(blueprintMarkdown);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
 
-  const handleDownload = () => {
+  const handleDownload = (e) => {
+    if (e) e.preventDefault();
     const blob = new Blob([blueprintMarkdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -63,26 +67,40 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
 
   const handleSubmitLead = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSimulatedSubmit(true);
   };
 
+  const mailtoLink = `mailto:opportunities@cynbit.in?subject=${encodeURIComponent(`Architectural Blueprint Inquiry: ${specId} (${blueprint.domain})`)}&body=${encodeURIComponent(
+    `Hello Cynbit Architects,\n\nI configured an architectural blueprint for ${blueprint.domain} using the Cynbit Architecture Lab.\n\n` +
+    `Specification ID: ${specId}\n` +
+    `Client: ${leadForm.fullName || 'Prospective Client'} (${leadForm.company || 'Enterprise'})\n` +
+    `Email: ${leadForm.email || ''}\n\n` +
+    `Configuration Summary:\n` +
+    `- Domain: ${blueprint.domain}\n` +
+    `- Cloud: ${blueprint.cloud}\n` +
+    `- Vector DB: ${blueprint.vectorDB}\n` +
+    `- Timeline: ${blueprint.metrics.weeks} Weeks (${blueprint.metrics.totalSprints} Sprints)\n` +
+    `- Capabilities: ${blueprint.capabilities.join(', ') || 'Baseline'}\n\n` +
+    `Please review this technical blueprint and advise on scheduling our discovery sync.\n\nBest regards,\n${leadForm.fullName || ''}`
+  )}`;
+
   return (
-    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-blueprint-title">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
+        <button type="button" className="modal-close-btn" onClick={onClose} aria-label="Close modal">
           <span className="material-symbols-outlined">close</span>
         </button>
 
         {/* Modal Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span className="material-symbols-outlined">description</span>
           </div>
           <div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
               Specification Ready • {specId}
             </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffffff' }}>
+            <h3 id="modal-blueprint-title" style={{ fontSize: '1.45rem', fontWeight: 900, color: '#ffffff' }}>
               Cynbit Architectural Blueprint
             </h3>
           </div>
@@ -93,19 +111,19 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
             <div>
               <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Domain</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>{blueprint.domain}</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#ffffff' }}>{blueprint.domain}</div>
             </div>
             <div>
               <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Timeline</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#38bdf8' }}>{blueprint.metrics.weeks} Weeks ({blueprint.metrics.totalSprints} Sprints)</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#38bdf8' }}>{blueprint.metrics.weeks} Weeks ({blueprint.metrics.totalSprints} Sprints)</div>
             </div>
             <div>
               <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Efficiency Boost</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#34d399' }}>+{blueprint.metrics.efficiencyBonus}% ROI</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#34d399' }}>+{blueprint.metrics.efficiencyBonus}% ROI</div>
             </div>
             <div>
               <div style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 800 }}>Hours Saved</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#fbbf24' }}>~{blueprint.metrics.totalHoursSaved}h / month</div>
+              <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#fbbf24' }}>~{blueprint.metrics.totalHoursSaved}h / month</div>
             </div>
           </div>
 
@@ -114,11 +132,17 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
               Configured Capabilities:
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {blueprint.capabilities.map(cap => (
-                <span key={cap} style={{ background: 'rgba(37, 99, 235, 0.2)', color: '#93c5fd', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
-                  ✓ {cap}
+              {blueprint.capabilities && blueprint.capabilities.length > 0 ? (
+                blueprint.capabilities.map(cap => (
+                  <span key={cap} style={{ background: 'rgba(37, 99, 235, 0.2)', color: '#93c5fd', padding: '0.3rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
+                    ✓ {cap}
+                  </span>
+                ))
+              ) : (
+                <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                  Baseline Core Architecture (No optional add-ons selected)
                 </span>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -126,18 +150,20 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
         {/* Action Controls: Copy & Download */}
         <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
           <button
+            type="button"
             className="btn btn-secondary"
             onClick={handleCopy}
-            style={{ flex: 1, padding: '0.75rem', fontSize: '0.8rem' }}
+            style={{ flex: 1, padding: '0.75rem', fontSize: '0.82rem' }}
           >
             <span className="material-symbols-outlined">{copied ? 'done' : 'content_copy'}</span>
             <span>{copied ? 'Copied to Clipboard!' : 'Copy Specification (Markdown)'}</span>
           </button>
 
           <button
+            type="button"
             className="btn btn-secondary"
             onClick={handleDownload}
-            style={{ flex: 1, padding: '0.75rem', fontSize: '0.8rem' }}
+            style={{ flex: 1, padding: '0.75rem', fontSize: '0.82rem' }}
           >
             <span className="material-symbols-outlined">download</span>
             <span>Download Spec (.md)</span>
@@ -146,17 +172,37 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
 
         {/* Lead Submission Section */}
         <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.75rem' }}>
-          {submitted ? (
-            <div style={{ textAlign: 'center', padding: '1.5rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '1rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#34d399', marginBottom: '0.5rem' }}>
-                check_circle
-              </span>
-              <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.5rem' }}>
-                Blueprint Transmitted to Cynbit Engineering Hub!
-              </h4>
-              <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '480px', margin: '0 auto' }}>
-                A Cynbit Lead Architect will review specification <strong>{specId}</strong> and contact you at <strong>{leadForm.email || 'your email'}</strong> within 24 hours.
+          {simulatedSubmit ? (
+            <div style={{ padding: '1.5rem', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '28px', color: '#38bdf8' }}>
+                  check_circle
+                </span>
+                <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  Consultation Blueprint Drafted (Demonstration Mode)
+                </h4>
+              </div>
+              <p style={{ color: '#cbd5e1', fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '1rem' }}>
+                Specification <strong>{specId}</strong> is compiled for <strong>{leadForm.fullName || 'Client'}</strong> ({leadForm.email || 'Email'}). In production, this technical specification is dispatched via Cynbit’s CRM webhook. You can also open an email draft directly below.
               </p>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <a
+                  href={mailtoLink}
+                  className="btn btn-primary"
+                  style={{ textDecoration: 'none', padding: '0.65rem 1.25rem', fontSize: '0.8rem' }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>mail</span>
+                  <span>Open Email Draft in Mail App</span>
+                </a>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setSimulatedSubmit(false)}
+                  style={{ padding: '0.65rem 1.25rem', fontSize: '0.8rem' }}
+                >
+                  Edit Details
+                </button>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmitLead}>
@@ -165,14 +211,15 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
                   Transmit Blueprint for Discovery Review
                 </h4>
                 <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-                  Our senior architects in Jaipur will analyze this technical payload and prepare a tailored kickoff deck before we connect.
+                  Our architects in Jaipur will analyze this technical payload and prepare a tailored kickoff deck before we connect.
                 </p>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                 <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Full Name</label>
+                  <label className="form-label" htmlFor="lead-name">Full Name</label>
                   <input
+                    id="lead-name"
                     type="text"
                     required
                     className="form-input"
@@ -183,8 +230,9 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
                 </div>
 
                 <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Work Email</label>
+                  <label className="form-label" htmlFor="lead-email">Work Email</label>
                   <input
+                    id="lead-email"
                     type="email"
                     required
                     className="form-input"
@@ -196,8 +244,9 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
               </div>
 
               <div className="form-group">
-                <label className="form-label">Company / Organization</label>
+                <label className="form-label" htmlFor="lead-company">Company / Organization</label>
                 <input
+                  id="lead-company"
                   type="text"
                   className="form-input"
                   placeholder="Your Organization / Startup"
@@ -206,15 +255,17 @@ ${blueprint.capabilities.map(c => `- ${c}`).join('\n')}
                 />
               </div>
 
-              <button
-                type="submit"
-                id="submit-blueprint-lead-btn"
-                className="btn btn-primary btn-glow"
-                style={{ width: '100%', padding: '0.9rem' }}
-              >
-                <span className="material-symbols-outlined">send</span>
-                <span>Dispatch Blueprint to Cynbit Architects (opportunities@cynbit.in)</span>
-              </button>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="submit"
+                  id="submit-blueprint-lead-btn"
+                  className="btn btn-primary"
+                  style={{ flex: 1, padding: '0.85rem' }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>send</span>
+                  <span>Transmit Technical Blueprint</span>
+                </button>
+              </div>
             </form>
           )}
         </div>

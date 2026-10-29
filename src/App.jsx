@@ -49,45 +49,10 @@ export default function App() {
 
   return (
     <div className="app-root">
-      {/* Top Banner: Intern Assessment Project Highlight */}
-      <div style={{
-        background: 'linear-gradient(90deg, #1e3a8a 0%, #0369a1 50%, #1e3a8a 100%)',
-        color: '#ffffff',
-        padding: '0.45rem 1rem',
-        fontSize: '0.75rem',
-        fontWeight: 800,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.75rem',
-        position: 'relative',
-        zIndex: 1001,
-        borderBottom: '1px solid rgba(255, 255, 255, 0.15)'
-      }}>
-        <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#38bdf8' }}>rocket_launch</span>
-        <span>
-          Cynbit Assessment Working Prototype • Built for Full Stack Developer Intern Task (Applicant: Yogesh Patil)
-        </span>
-        <button
-          onClick={scrollToLab}
-          style={{
-            background: 'rgba(255, 255, 255, 0.2)',
-            border: 'none',
-            color: '#fff',
-            padding: '0.15rem 0.6rem',
-            borderRadius: '9999px',
-            fontSize: '0.65rem',
-            fontWeight: 800,
-            cursor: 'pointer'
-          }}
-        >
-          Test Feature &darr;
-        </button>
-      </div>
-
-      <Navbar onOpenLab={scrollToLab} onOpenSandbox={scrollToSandbox} />
+      <Navbar 
+        onOpenLab={scrollToLab} 
+        onOpenSandbox={scrollToSandbox} 
+      />
 
       <main>
         <Hero onOpenLab={scrollToLab} onOpenSandbox={scrollToSandbox} />

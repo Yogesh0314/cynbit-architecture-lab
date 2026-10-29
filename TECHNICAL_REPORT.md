@@ -126,12 +126,58 @@ To solve this friction, we designed and built an interactive system that bridges
 
 ---
 
-## 7. Submission Checklist for Candidate Portal
+## 7. Professional UI Polish & Functional Bug Fixes
+
+### 7.1 Logo Visibility Root Cause & Resolution
+* **Root Cause:** In `public/logo.svg`, the text `"cyn"` used `fill="#0f172a"`, which blended directly into the dark navbar background (`#0a0e1a` / `#0f172a`), rendering the word `"cyn"` invisible and only displaying `"bit"`.
+* **Resolution:** Re-authored the SVG wordmark so `"cyn"` uses `#ffffff` (crisp white) and `"bit"` uses vibrant cyan `#38bdf8`, with `#94a3b8` for `"TECHNOLOGIES"`, guaranteeing complete legibility across both desktop and mobile viewports.
+
+### 7.2 Enterprise Dashboard Navigation Redesign
+* Replaced transparent navigation links with a high-contrast enterprise segmented control (`nav-segmented-control`).
+* Added accessible active states (`activeSection`), restrained hover/focus rings (`:focus-visible`), and a solid dark-slate mobile drawer with category subtitles.
+
+### 7.3 Removal of Candidate Assessment Banner
+* Cleanly removed the applicant-specific top announcement bar from `App.jsx`, ensuring the public UI presents as a legitimate enterprise product rather than a candidate assignment.
+
+### 7.4 Truly Dynamic Architecture SVG Topology
+* The topology diagram is now fully derived from configuration state:
+  * Changing Cloud Provider (AWS / Azure / GCP / Hybrid) updates the ingestion node label and brand color theme.
+  * Changing Vector Database (Pinecone / Qdrant / PgVector / Milvus) updates the memory node label.
+  * Toggling capabilities (RAG, Tool Integrations, Zero-Trust Guardrails, Human Approval, WebSocket Stream) dynamically attaches/detaches nodes and SVG connector paths.
+  * Configured with a clean baseline state when no optional capabilities are selected.
+
+### 7.5 Resolution of "Execute Live Agent" Navigation Bug
+* **Root Cause:** The execute button lacked `type="button"` and `e.preventDefault()`, causing default browser form/anchor behavior that triggered page reloads to a blank query route.
+* **Resolution:** 
+  * Added explicit `type="button"` and event stop propagation.
+  * Implemented a 4-state lifecycle: `IDLE` $\rightarrow$ `INITIALIZING` $\rightarrow$ `RUNNING` $\rightarrow$ `COMPLETED`.
+  * Added the 6 sequential demonstration events: (1) Request Received, (2) Requirements Analyzed, (3) Tool Selected, (4) Tool Executed, (5) Observation Returned, (6) Final Response Generated.
+  * Embedded a dedicated `Final Result Card` with telemetry metrics and added "Run Again" / "Reset" controls.
+  * Labeled honestly as an in-browser simulated demonstration.
+
+---
+
+## 8. Verification & Acceptance Testing Status
+
+| Acceptance Test Case | Description | Result |
+|---|---|---|
+| **Test 1: Provider Node Update** | Change Cloud from AWS to Azure/GCP | **PASSED** (Node label and color update immediately) |
+| **Test 2: Vector DB Update** | Change Vector DB from Pinecone to Qdrant/PgVector/Milvus | **PASSED** (Vector node label updates dynamically) |
+| **Test 3: Capability Node Toggles** | Toggle RAG, API Tool Calling, Human Gate, Security | **PASSED** (Nodes and connector paths appear/disappear) |
+| **Test 4: Empty State Handling** | Deselect all optional capabilities | **PASSED** (Baseline pipeline displayed with informative badge) |
+| **Test 5: Live Agent Execution** | Click "Execute Live Agent" on Document Intelligence | **PASSED** (Executes in-place across 6 stages; no navigation) |
+| **Test 6: Scenario Switching** | Switch between all 3 preset scenarios and execute | **PASSED** (Different outputs and metrics produced cleanly) |
+| **Test 7: Blueprint Generation** | Generate blueprint, copy to clipboard, download `.md` | **PASSED** (Markdown matches selections; modal opens/closes) |
+| **Test 8: Production Build** | Run `npm run build` | **PASSED** (Zero warnings, zero errors in 2.05s) |
+
+---
+
+## 9. Submission Checklist for Candidate Portal
 
 1. **GitHub Repository:**
-   - Initialize git, commit clean atomic commits, push to candidate GitHub profile.
+   - Commit clean atomic commits, push to candidate GitHub profile.
 2. **Deployment:**
-   - Deploy `dist/` to Vercel, Netlify, or GitHub Pages.
+   - Deploy `dist/` to Vercel or Netlify.
 3. **Submit Work Link:**
-   - Open [https://www.cynbit.in/candidate/cmsd7jaq9000704l6bcxc7c0m](https://www.cynbit.in/candidate/cmsd7jaq9000704l6bcxc7c0m).
-   - Enter repository URL and deployment link.
+   - Candidate Portal: [https://www.cynbit.in/candidate/cmsd7jaq9000704l6bcxc7c0m](https://www.cynbit.in/candidate/cmsd7jaq9000704l6bcxc7c0m)
+

@@ -67,6 +67,7 @@ export default function EcosystemShowcase({ onOpenLab }) {
 
             <div style={{ marginTop: '2rem' }}>
               <button 
+                type="button"
                 className="btn btn-secondary" 
                 onClick={onOpenLab}
                 style={{ width: '100%', padding: '0.85rem', fontSize: '0.8rem' }}
@@ -136,6 +137,7 @@ export default function EcosystemShowcase({ onOpenLab }) {
 
             <div style={{ marginTop: '2rem' }}>
               <button 
+                type="button"
                 className="btn btn-primary" 
                 onClick={onOpenLab}
                 style={{ width: '100%', padding: '0.85rem', fontSize: '0.8rem' }}

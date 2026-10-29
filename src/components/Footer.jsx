@@ -38,6 +38,7 @@ export default function Footer({ onOpenLab }) {
             <ul className="footer-links">
               <li>
                 <button 
+                  type="button"
                   onClick={onOpenLab} 
                   style={{ background: 'none', border: 'none', color: '#38bdf8', cursor: 'pointer', padding: 0, font: 'inherit', textAlign: 'left', fontWeight: 700 }}
                 >
@@ -76,7 +77,7 @@ export default function Footer({ onOpenLab }) {
                 className="form-input"
                 style={{ padding: '0.6rem 0.85rem', fontSize: '0.85rem' }}
               />
-              <button className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.75rem' }}>
+              <button type="button" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.75rem' }}>
                 Join
               </button>
             </div>

@@ -24,19 +24,21 @@ export default function Hero({ onOpenLab, onOpenSandbox }) {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
               <button 
                 id="hero-launch-lab-btn"
-                className="btn btn-primary btn-glow"
+                type="button"
+                className="btn btn-primary"
                 onClick={onOpenLab}
-                style={{ padding: '1rem 2.2rem', fontSize: '0.95rem' }}
+                style={{ padding: '0.9rem 2rem', fontSize: '0.92rem' }}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>account_tree</span>
-                <span>Open Architecture Lab</span>
+                <span>Launch Architecture Lab</span>
               </button>
 
               <button 
                 id="hero-agent-sandbox-btn"
+                type="button"
                 className="btn btn-secondary"
                 onClick={onOpenSandbox}
-                style={{ padding: '1rem 1.8rem', fontSize: '0.95rem' }}
+                style={{ padding: '0.9rem 1.8rem', fontSize: '0.92rem' }}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>smart_toy</span>
                 <span>Live Agent Sandbox</span>
@@ -152,6 +154,7 @@ export default function Hero({ onOpenLab, onOpenSandbox }) {
               {/* Bottom Quick Action */}
               <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
                 <button
+                  type="button"
                   className="btn btn-primary"
                   onClick={onOpenLab}
                   style={{ width: '100%', padding: '0.75rem', fontSize: '0.8rem' }}
